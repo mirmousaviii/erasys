@@ -8,6 +8,9 @@
     },
     {
       "path": "./apps/web-ssr"
+    },
+    {
+      "path": "./apps/web-spa"
     }
   ]
 }
