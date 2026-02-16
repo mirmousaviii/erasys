@@ -3,7 +3,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { fetchProfile, buildImageUrl } from '@erasys/profile-sdk';
 
-const API_BASE = 'https://www.hunqz.com';
+const API_BASE = process.env.API_BASE_URL || 'https://www.hunqz.com';
 
 type PageProps = {
   params: Promise<{ username: string }>;

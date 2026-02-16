@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-const API_BASE = 'https://www.hunqz.com';
+const API_BASE = process.env.API_BASE_URL || 'https://www.hunqz.com';
 
 export async function GET(
   _request: Request,
