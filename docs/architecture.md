@@ -11,15 +11,18 @@ packages/   Library projects (shared code)
 
 ### Applications
 
-| Project | Framework | Port | Rendering |
-|---|---|---|---|
-| `web-ssr` | Next.js 16 (App Router) | 3000 | Server-side (SSR) |
-| `web-spa` | React 19 + Vite | 4200 | Client-side (CSR) |
+| Project   | Framework                | Port  | Rendering / Runtime      |
+| --------- | ------------------------ | ----- | ------------------------ |
+| `web-ssr` | Next.js 16 (App Router)  | 3000  | Server-side (SSR)       |
+| `web-spa` | React 19 + Vite          | 4200  | Client-side (CSR)        |
+| `mobile`  | React Native + Vite/Metro| 4201* | Browser (Vite) or native |
+
+\* Vite dev server uses port 4201 by default; Metro uses 8081 for the native bundler.
 
 ### Libraries
 
-| Project | Purpose |
-|---|---|
+| Project       | Purpose                                                                  |
+| ------------- | ------------------------------------------------------------------------ |
 | `profile-sdk` | Framework-agnostic API client, TypeScript types, and image URL utilities |
 
 ## Dependency Graph
@@ -27,6 +30,7 @@ packages/   Library projects (shared code)
 ```
 web-ssr  ──► profile-sdk
 web-spa  ──► profile-sdk
+mobile   ──► profile-sdk
 ```
 
 Both applications depend on `profile-sdk` but have **zero coupling** to each other. The SDK is designed to work in any JavaScript runtime (Node.js, browser, edge).
@@ -54,9 +58,19 @@ Both applications depend on `profile-sdk` but have **zero coupling** to each oth
 - Fetches data client-side via `useEffect` with proper cleanup (cancelled flag).
 - Uses Vite's dev proxy to bypass CORS in development.
 
+### Mobile Application (`mobile`)
+
+- **React Native** with the same feature set as the web apps (home + profile screens).
+- **Web (browser):** Run `npx nx dev mobile` — Vite serves the app with `react-native-web`; open http://localhost:4201.
+- **Native (iOS/Android):** Run `npx nx start mobile` (Metro), then `npx nx run-ios mobile` or `npx nx run-android mobile`.
+- Reuses `@erasys/profile-sdk`; no CORS in native, so it calls the external API directly.
+- Styling via React Native `StyleSheet` and a shared `theme.ts` (colors, spacing, font sizes).
+
 ### Styling
 
-Both apps use **Tailwind CSS** with a mobile-first responsive approach. Breakpoints (`sm:`, `md:`, `lg:`) are used consistently for layout adaptation. No custom CSS is written -- all styling is done via utility classes.
+**Web (SSR + SPA):** Tailwind CSS with a mobile-first responsive approach. Breakpoints (`sm:`, `md:`, `lg:`) are used consistently; no custom CSS.
+
+**Mobile:** React Native `StyleSheet` and a central `theme.ts` (colors, spacing, font sizes). No Tailwind (not used in the native bundle).
 
 ## Nx Configuration
 

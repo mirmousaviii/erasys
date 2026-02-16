@@ -11,6 +11,9 @@
     },
     {
       "path": "./apps/web-spa"
+    },
+    {
+      "path": "./apps/mobile"
     }
   ]
 }

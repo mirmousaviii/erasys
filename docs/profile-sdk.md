@@ -13,16 +13,16 @@ import { fetchProfile } from '@erasys/profile-sdk';
 
 const profile = await fetchProfile({
   baseUrl: 'https://www.hunqz.com',
-  username: 'msescortplus',  // optional, defaults to 'msescortplus'
+  username: 'msescortplus', // optional, defaults to 'msescortplus'
 });
 ```
 
 **Parameters:**
 
-| Field | Type | Required | Description |
-|---|---|---|---|
-| `baseUrl` | `string` | Yes | API origin. Use `''` for relative/proxied requests. |
-| `username` | `string` | No | Profile username. Defaults to `'msescortplus'`. |
+| Field      | Type     | Required | Description                                         |
+| ---------- | -------- | -------- | --------------------------------------------------- |
+| `baseUrl`  | `string` | Yes      | API origin. Use `''` for relative/proxied requests. |
+| `username` | `string` | No       | Profile username. Defaults to `'msescortplus'`.     |
 
 **Throws** an `Error` if the response status is not OK or the network request fails.
 
@@ -43,15 +43,15 @@ const url = buildImageUrl('3b587575644d3097fc34228b3c');
 
 All types are exported for consumers:
 
-| Type | Description |
-|---|---|
-| `Profile` | Complete profile object (top-level) |
-| `ProfilePicture` | Picture metadata including `url_token` |
-| `ProfileLocation` | Location with city and country |
-| `PersonalInfo` | Physical attributes, languages, age |
-| `ServiceInfo` | Service rates and locations |
-| `Review` | User review with optional reply |
-| `SocialLink` | Social media link (type + value) |
+| Type              | Description                            |
+| ----------------- | -------------------------------------- |
+| `Profile`         | Complete profile object (top-level)    |
+| `ProfilePicture`  | Picture metadata including `url_token` |
+| `ProfileLocation` | Location with city and country         |
+| `PersonalInfo`    | Physical attributes, languages, age    |
+| `ServiceInfo`     | Service rates and locations            |
+| `Review`          | User review with optional reply        |
+| `SocialLink`      | Social media link (type + value)       |
 
 ## File Structure
 
