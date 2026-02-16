@@ -1,6 +1,7 @@
 import './global.css';
 import type { Metadata, Viewport } from 'next';
 import Link from 'next/link';
+import { HeaderCta } from './components/header-cta';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -80,14 +81,12 @@ function Header() {
           <span className="text-lg font-bold tracking-tight text-gray-900 sm:text-xl">
             Erasys<span className="text-indigo-600"> Gallery</span>
           </span>
+          <span className="ml-1 rounded bg-indigo-100 px-1.5 py-0.5 text-[10px] font-bold uppercase text-indigo-700">
+            SSR
+          </span>
         </Link>
         <div className="flex items-center gap-3 sm:gap-5">
-          <Link
-            href="/profile/msescortplus"
-            className="rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-indigo-700 sm:px-4 sm:py-2"
-          >
-            Browse Profile
-          </Link>
+          <HeaderCta />
         </div>
       </nav>
     </header>
