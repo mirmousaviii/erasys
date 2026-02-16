@@ -5,6 +5,9 @@
   "references": [
     {
       "path": "./packages/profile-sdk"
+    },
+    {
+      "path": "./apps/web-ssr"
     }
   ]
 }
