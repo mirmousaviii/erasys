@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
+import { ArrowRight } from 'lucide-react-native';
 import { colors, spacing, fontSize } from '../theme';
 
 interface HomeScreenProps {
@@ -33,7 +34,7 @@ export function HomeScreen({ onNavigateToProfile }: HomeScreenProps) {
           activeOpacity={0.8}
         >
           <Text style={styles.heroButtonText}>Explore Sample Profile</Text>
-          <Text style={styles.heroButtonArrow}>{'  \u2192'}</Text>
+          <ArrowRight size={18} color={colors.primaryDark} />
         </TouchableOpacity>
       </View>
 
@@ -164,22 +165,19 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xxl,
   },
   heroButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.sm,
+    alignSelf: 'flex-start',
     backgroundColor: colors.white,
     borderRadius: 10,
     paddingVertical: spacing.lg,
     paddingHorizontal: spacing.xl,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'flex-start',
   },
   heroButtonText: {
     fontSize: fontSize.md,
     fontWeight: '700',
-    color: colors.primaryDark,
-  },
-  heroButtonArrow: {
-    fontSize: fontSize.lg,
     color: colors.primaryDark,
   },
 

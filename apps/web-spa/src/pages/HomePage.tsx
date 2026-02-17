@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { ArrowRight, ChevronDown, User } from 'lucide-react';
 import { FEATURED_USERNAME } from '../constants';
 import { FeatureCard, StatItem } from '../components';
 
@@ -36,40 +37,14 @@ export function HomePage() {
                 className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-white px-6 py-3.5 text-base font-semibold text-emerald-700 shadow-lg transition-all hover:bg-emerald-50 hover:shadow-xl sm:w-auto"
               >
                 Explore Featured Profile
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  aria-hidden
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-                  />
-                </svg>
+                <ArrowRight className="h-5 w-5" strokeWidth={2} aria-hidden />
               </Link>
               <a
                 href="#how-it-works"
                 className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-white/30 px-6 py-3.5 text-base font-medium text-white transition-all hover:bg-white/10 sm:w-auto"
               >
                 Learn More
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  aria-hidden
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                  />
-                </svg>
+                <ChevronDown className="h-4 w-4" strokeWidth={2} aria-hidden />
               </a>
             </div>
           </div>
@@ -139,20 +114,7 @@ export function HomePage() {
                 to={`/profile/${FEATURED_USERNAME}`}
                 className="mt-8 inline-flex items-center gap-2 rounded-lg bg-white px-8 py-3.5 text-base font-semibold text-emerald-700 shadow-lg transition-all hover:bg-emerald-50 hover:shadow-xl"
               >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  aria-hidden
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
-                  />
-                </svg>
+                <User className="h-5 w-5" strokeWidth={1.5} aria-hidden />
                 View {FEATURED_USERNAME}'s Profile
               </Link>
             </div>

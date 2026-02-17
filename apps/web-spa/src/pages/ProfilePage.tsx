@@ -1,5 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import {
+  ArrowLeft,
+  Calendar,
+  ChevronRight,
+  Languages,
+  Loader2,
+  MapPin,
+} from 'lucide-react';
 import { buildImageUrl } from '@erasys/profile-sdk';
 import { DetailCard } from '../components';
 import { useProfile } from '../hooks/useProfile';
@@ -17,26 +25,11 @@ export function ProfilePage() {
   if (loading) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center">
-        <svg
+        <Loader2
           className="h-10 w-10 animate-spin text-emerald-600"
-          viewBox="0 0 24 24"
-          fill="none"
+          strokeWidth={2}
           aria-hidden
-        >
-          <circle
-            className="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeWidth="4"
-          />
-          <path
-            className="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-          />
-        </svg>
+        />
         <p className="mt-4 text-gray-500">Loading profile...</p>
       </div>
     );
@@ -81,20 +74,7 @@ export function ProfilePage() {
           onClick={() => navigate('/')}
           className="mt-4 inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
         >
-          <svg
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            aria-hidden
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
-            />
-          </svg>
+          <ArrowLeft className="h-4 w-4" strokeWidth={2} aria-hidden />
           Back to Home
         </button>
       </div>
@@ -110,20 +90,7 @@ export function ProfilePage() {
             <Link to="/" className="transition-colors hover:text-emerald-600">
               Profiles
             </Link>
-            <svg
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              aria-hidden
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m8.25 4.5 7.5 7.5-7.5 7.5"
-              />
-            </svg>
+            <ChevronRight className="h-4 w-4" strokeWidth={1.5} aria-hidden />
             <span className="font-medium text-gray-900">{profile.name}</span>
           </nav>
         </div>
@@ -162,60 +129,16 @@ export function ProfilePage() {
               <p className="mt-2 text-gray-600">{profile.headline}</p>
               <div className="mt-3 flex flex-wrap items-center justify-center gap-4 text-sm text-gray-500 sm:justify-start">
                 <span className="inline-flex items-center gap-1">
-                  <svg
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    aria-hidden
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
-                    />
-                  </svg>
+                  <MapPin className="h-4 w-4" strokeWidth={1.5} aria-hidden />
                   {profile.location.name}, {profile.location.country}
                 </span>
                 <span className="inline-flex items-center gap-1">
-                  <svg
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    aria-hidden
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"
-                    />
-                  </svg>
+                  <Calendar className="h-4 w-4" strokeWidth={1.5} aria-hidden />
                   Age: {profile.personal.age}
                 </span>
                 {(profile.personal.spoken_languages ?? []).length > 0 && (
                   <span className="inline-flex items-center gap-1">
-                    <svg
-                      className="h-4 w-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      aria-hidden
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="m10.5 21 5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 0 1 6-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138c.896.061 1.785.147 2.666.257m-4.589 8.495a18.023 18.023 0 0 1-3.827-5.802"
-                      />
-                    </svg>
+                    <Languages className="h-4 w-4" strokeWidth={1.5} aria-hidden />
                     {(profile.personal.spoken_languages ?? [])
                       .map((l) => l.toUpperCase())
                       .join(', ')}

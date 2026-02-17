@@ -10,6 +10,13 @@ import {
   ActivityIndicator,
   Dimensions,
 } from 'react-native';
+import {
+  ArrowLeft,
+  Calendar,
+  ChevronRight,
+  Languages,
+  MapPin,
+} from 'lucide-react-native';
 import { fetchProfile, buildImageUrl } from '@erasys/profile-sdk';
 import type { Profile, Review } from '@erasys/profile-sdk';
 import { colors, spacing, fontSize } from '../theme';
@@ -110,9 +117,8 @@ export function ProfileScreen({
           onPress={onGoBack}
           activeOpacity={0.8}
         >
-          <Text style={styles.backButtonSecondaryText}>
-            {'\u2190'} Back to Home
-          </Text>
+          <ArrowLeft size={16} color={colors.gray700} />
+          <Text style={styles.backButtonSecondaryText}> Back to Home</Text>
         </TouchableOpacity>
       </View>
     );
@@ -125,7 +131,7 @@ export function ProfileScreen({
         <TouchableOpacity onPress={onGoBack}>
           <Text style={styles.breadcrumbLink}>Profiles</Text>
         </TouchableOpacity>
-        <Text style={styles.breadcrumbSep}>{' \u203A '}</Text>
+        <ChevronRight size={14} color={colors.gray500} />
         <Text style={styles.breadcrumbCurrent}>{profile.name}</Text>
       </View>
 
@@ -179,21 +185,26 @@ export function ProfileScreen({
           </View>
           <Text style={styles.headline}>{profile.headline}</Text>
           <View style={styles.metaRow}>
-            <Text style={styles.metaItem}>
-              {'\uD83D\uDCCD'} {profile.location.name},{' '}
-              {profile.location.country}
-            </Text>
-            <Text style={styles.metaItem}>
-              {'\uD83C\uDF82'} Age: {profile.personal.age}
-            </Text>
+            <View style={styles.metaItemRow}>
+              <MapPin size={14} color={colors.gray600} />
+              <Text style={styles.metaItem}>
+                {profile.location.name}, {profile.location.country}
+              </Text>
+            </View>
+            <View style={styles.metaItemRow}>
+              <Calendar size={14} color={colors.gray600} />
+              <Text style={styles.metaItem}>Age: {profile.personal.age}</Text>
+            </View>
           </View>
           {(profile.personal.spoken_languages ?? []).length > 0 && (
-            <Text style={styles.metaItem}>
-              {'\uD83C\uDF10'}{' '}
-              {(profile.personal.spoken_languages ?? [])
+            <View style={styles.metaItemRow}>
+              <Languages size={14} color={colors.gray600} />
+              <Text style={styles.metaItem}>
+                {(profile.personal.spoken_languages ?? [])
                 .map((l) => l.toUpperCase())
                 .join(', ')}
-            </Text>
+              </Text>
+            </View>
           )}
         </View>
       </View>
@@ -404,6 +415,9 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
   backButtonSecondary: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
     marginTop: spacing.lg,
     borderWidth: 1,
     borderColor: colors.gray300,
@@ -421,6 +435,7 @@ const styles = StyleSheet.create({
   breadcrumb: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: spacing.xs,
     backgroundColor: colors.white,
     borderBottomWidth: 1,
     borderBottomColor: colors.gray200,
@@ -517,6 +532,11 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: spacing.md,
     marginTop: spacing.md,
+  },
+  metaItemRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
   },
   metaItem: {
     fontSize: fontSize.sm,
