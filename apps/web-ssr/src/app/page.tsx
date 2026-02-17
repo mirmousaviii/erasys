@@ -77,7 +77,10 @@ export default function HomePage() {
       </section>
 
       {/* Stats Bar */}
-      <section className="border-b border-gray-200 bg-white">
+      <section
+        className="border-b border-gray-200 bg-white"
+        aria-label="Platform highlights"
+      >
         <div className="mx-auto grid max-w-7xl grid-cols-2 divide-x divide-gray-200 sm:grid-cols-4">
           <StatItem value="Instant" label="Page Load (SSR)" />
           <StatItem value="20+" label="Photos per Profile" />
@@ -87,13 +90,20 @@ export default function HomePage() {
       </section>
 
       {/* How It Works */}
-      <section id="how-it-works" className="scroll-mt-20 py-16 sm:py-24">
+      <section
+        id="how-it-works"
+        className="scroll-mt-20 py-16 sm:py-24"
+        aria-labelledby="how-it-works-heading"
+      >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <p className="text-sm font-semibold uppercase tracking-widest text-indigo-600">
               How It Works
             </p>
-            <h2 className="mt-2 text-2xl font-bold text-gray-900 sm:text-3xl">
+            <h2
+              id="how-it-works-heading"
+              className="mt-2 text-2xl font-bold text-gray-900 sm:text-3xl"
+            >
               From API to Gallery in Milliseconds
             </h2>
             <p className="mt-4 text-gray-600">
@@ -145,11 +155,17 @@ export default function HomePage() {
       </section>
 
       {/* Featured Profile CTA */}
-      <section className="border-t border-gray-200 bg-white py-16 sm:py-20">
+      <section
+        className="border-t border-gray-200 bg-white py-16 sm:py-20"
+        aria-labelledby="cta-heading"
+      >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 shadow-xl">
             <div className="px-6 py-12 text-center sm:px-12 sm:py-16">
-              <h2 className="text-2xl font-bold text-white sm:text-3xl">
+              <h2
+                id="cta-heading"
+                className="text-2xl font-bold text-white sm:text-3xl"
+              >
                 Ready to See It in Action?
               </h2>
               <p className="mx-auto mt-4 max-w-lg text-indigo-100">

@@ -72,6 +72,7 @@ export default async function ProfilePage({ params }: PageProps) {
             viewBox="0 0 24 24"
             strokeWidth={2}
             stroke="currentColor"
+            aria-hidden="true"
           >
             <path
               strokeLinecap="round"
@@ -90,7 +91,10 @@ export default async function ProfilePage({ params }: PageProps) {
       {/* Breadcrumb */}
       <div className="border-b border-gray-200 bg-white">
         <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
-          <nav className="flex items-center gap-2 text-sm text-gray-500">
+          <nav
+            aria-label="Breadcrumb"
+            className="flex items-center gap-2 text-sm text-gray-500"
+          >
             <Link href="/" className="transition-colors hover:text-indigo-600">
               Home
             </Link>
@@ -100,6 +104,7 @@ export default async function ProfilePage({ params }: PageProps) {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -107,7 +112,12 @@ export default async function ProfilePage({ params }: PageProps) {
                 d="m8.25 4.5 7.5 7.5-7.5 7.5"
               />
             </svg>
-            <span className="font-medium text-gray-900">{profile.name}</span>
+            <span
+              className="font-medium text-gray-900"
+              aria-current="page"
+            >
+              {profile.name}
+            </span>
           </nav>
         </div>
       </div>
@@ -218,8 +228,13 @@ export default async function ProfilePage({ params }: PageProps) {
       </section>
 
       {/* Personal Details */}
-      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <h2 className="text-xl font-bold text-gray-900">About</h2>
+      <section
+        className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8"
+        aria-labelledby="about-heading"
+      >
+        <h2 id="about-heading" className="text-xl font-bold text-gray-900">
+          About
+        </h2>
         {profile.personal.profile_text && (
           <p className="mt-3 max-w-3xl leading-relaxed text-gray-600 break-words">
             {profile.personal.profile_text}
@@ -244,8 +259,11 @@ export default async function ProfilePage({ params }: PageProps) {
       </section>
 
       {/* Photo Grid */}
-      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <h2 className="text-xl font-bold text-gray-900">
+      <section
+        className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8"
+        aria-labelledby="photos-heading"
+      >
+        <h2 id="photos-heading" className="text-xl font-bold text-gray-900">
           Photos
           <span className="ml-2 text-base font-normal text-gray-500">
             ({profile.pictures.length})
@@ -276,8 +294,11 @@ export default async function ProfilePage({ params }: PageProps) {
 
       {/* Reviews */}
       {profile.reviews.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <h2 className="text-xl font-bold text-gray-900">
+        <section
+          className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8"
+          aria-labelledby="reviews-heading"
+        >
+          <h2 id="reviews-heading" className="text-xl font-bold text-gray-900">
             Reviews
             <span className="ml-2 text-base font-normal text-gray-500">
               ({profile.reviews.length})
@@ -342,8 +363,13 @@ export default async function ProfilePage({ params }: PageProps) {
 
       {/* Social Links */}
       {profile.social_links.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <h2 className="text-xl font-bold text-gray-900">Social</h2>
+        <section
+          className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8"
+          aria-labelledby="social-heading"
+        >
+          <h2 id="social-heading" className="text-xl font-bold text-gray-900">
+            Social
+          </h2>
           <div className="mt-4 flex flex-wrap gap-3">
             {profile.social_links.map((link) => (
               <span
@@ -366,12 +392,14 @@ function DetailCard({ label, value }: { label: string; value: string }) {
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white px-4 py-3">
-      <p className="text-xs font-medium uppercase tracking-wider text-gray-500">
-        {label}
-      </p>
-      <p className="mt-1 text-sm font-semibold capitalize text-gray-900">
-        {display.toLowerCase()}
-      </p>
+      <dl className="m-0">
+        <dt className="text-xs font-medium uppercase tracking-wider text-gray-500">
+          {label}
+        </dt>
+        <dd className="mt-1 text-sm font-semibold capitalize text-gray-900">
+          {display.toLowerCase()}
+        </dd>
+      </dl>
     </div>
   );
 }
