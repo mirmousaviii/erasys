@@ -12,6 +12,8 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://erasys-gallery.com'),
+  applicationName: 'Erasys Gallery',
+  referrer: 'strict-origin-when-cross-origin',
   title: {
     default: 'Erasys Gallery — Discover & Browse User Profiles',
     template: '%s | Erasys Gallery',
@@ -33,11 +35,20 @@ export const metadata: Metadata = {
     title: 'Erasys Gallery — Discover & Browse User Profiles',
     description:
       'Discover user profiles and browse curated photo galleries. Fast, beautiful, and optimized for every device.',
+    images: [
+      {
+        url: '/og-default.png',
+        width: 1200,
+        height: 630,
+        alt: 'Erasys Gallery — Discover & Browse User Profiles',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Erasys Gallery',
     description: 'Discover user profiles and browse curated photo galleries.',
+    images: ['/og-default.png'],
   },
   robots: {
     index: true,

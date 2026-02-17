@@ -20,9 +20,13 @@ export async function generateMetadata({
     return {
       title: `${profile.name}`,
       description: profile.headline,
+      alternates: {
+        canonical: `/profile/${username}`,
+      },
       openGraph: {
         title: `${profile.name} | Erasys Gallery`,
         description: profile.headline,
+        url: `/profile/${username}`,
         images: [
           {
             url: buildImageUrl(profile.preview_pic.url_token),
@@ -35,6 +39,12 @@ export async function generateMetadata({
   } catch {
     return {
       title: 'Profile Not Found',
+      description:
+        'The requested profile could not be found. It may have been removed or the username is incorrect.',
+      robots: {
+        index: false,
+        follow: true,
+      },
     };
   }
 }
