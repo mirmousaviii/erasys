@@ -66,6 +66,7 @@ export const App = () => {
           <ProfileScreen
             username={route.username}
             onGoBack={navigateHome}
+            onSearchProfile={navigateToProfile}
           />
         )}
       </SafeAreaView>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
+  TextInput,
   Image,
   StyleSheet,
   ScrollView,
@@ -15,8 +16,7 @@ import { colors, spacing, fontSize } from '../theme';
 
 // In browser (react-native-web), use relative URL so Vite proxy handles CORS.
 // On native (Metro), no CORS — call API directly.
-const API_BASE =
-  typeof document !== 'undefined' ? '' : 'https://www.hunqz.com';
+const API_BASE = typeof document !== 'undefined' ? '' : 'https://www.hunqz.com';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const IMAGE_COLUMNS = 3;
 const IMAGE_GAP = 3;
@@ -27,12 +27,18 @@ const IMAGE_SIZE =
 interface ProfileScreenProps {
   username: string;
   onGoBack: () => void;
+  onSearchProfile: (username: string) => void;
 }
 
-export function ProfileScreen({ username, onGoBack }: ProfileScreenProps) {
+export function ProfileScreen({
+  username,
+  onGoBack,
+  onSearchProfile,
+}: ProfileScreenProps) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     let cancelled = false;
@@ -48,7 +54,7 @@ export function ProfileScreen({ username, onGoBack }: ProfileScreenProps) {
       .catch((err) => {
         if (!cancelled)
           setError(
-            err instanceof Error ? err.message : 'Failed to load profile'
+            err instanceof Error ? err.message : 'Failed to load profile',
           );
       })
       .finally(() => {
@@ -70,14 +76,43 @@ export function ProfileScreen({ username, onGoBack }: ProfileScreenProps) {
   }
 
   if (error || !profile) {
+    const trimmed = searchQuery.trim();
     return (
       <View style={styles.center}>
         <Text style={styles.errorTitle}>Profile Not Found</Text>
         <Text style={styles.errorMessage}>
           Could not load profile for &ldquo;{username}&rdquo;.
         </Text>
-        <TouchableOpacity style={styles.backButton} onPress={onGoBack}>
-          <Text style={styles.backButtonText}>{'\u2190'}  Back to Home</Text>
+        <View style={styles.searchRow}>
+          <TextInput
+            style={styles.searchInput}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            placeholder="Search by username"
+            placeholderTextColor={colors.gray400}
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+          <TouchableOpacity
+            style={[
+              styles.searchButton,
+              !trimmed && styles.searchButtonDisabled,
+            ]}
+            onPress={() => trimmed && onSearchProfile(trimmed)}
+            disabled={!trimmed}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.searchButtonText}>Search</Text>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity
+          style={styles.backButtonSecondary}
+          onPress={onGoBack}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.backButtonSecondaryText}>
+            {'\u2190'} Back to Home
+          </Text>
         </TouchableOpacity>
       </View>
     );
@@ -88,7 +123,7 @@ export function ProfileScreen({ username, onGoBack }: ProfileScreenProps) {
       {/* Breadcrumb */}
       <View style={styles.breadcrumb}>
         <TouchableOpacity onPress={onGoBack}>
-          <Text style={styles.breadcrumbLink}>Home</Text>
+          <Text style={styles.breadcrumbLink}>Profiles</Text>
         </TouchableOpacity>
         <Text style={styles.breadcrumbSep}>{' \u203A '}</Text>
         <Text style={styles.breadcrumbCurrent}>{profile.name}</Text>
@@ -152,10 +187,10 @@ export function ProfileScreen({ username, onGoBack }: ProfileScreenProps) {
               {'\uD83C\uDF82'} Age: {profile.personal.age}
             </Text>
           </View>
-          {profile.personal.spoken_languages.length > 0 && (
+          {(profile.personal.spoken_languages ?? []).length > 0 && (
             <Text style={styles.metaItem}>
               {'\uD83C\uDF10'}{' '}
-              {profile.personal.spoken_languages
+              {(profile.personal.spoken_languages ?? [])
                 .map((l) => l.toUpperCase())
                 .join(', ')}
             </Text>
@@ -193,10 +228,12 @@ export function ProfileScreen({ username, onGoBack }: ProfileScreenProps) {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>
           Photos{' '}
-          <Text style={styles.sectionCount}>({profile.pictures.length})</Text>
+          <Text style={styles.sectionCount}>
+            ({(profile.pictures ?? []).length})
+          </Text>
         </Text>
         <View style={styles.photoGrid}>
-          {profile.pictures.map((pic) => (
+          {(profile.pictures ?? []).map((pic) => (
             <Image
               key={pic.id}
               source={{ uri: buildImageUrl(pic.url_token) }}
@@ -207,26 +244,26 @@ export function ProfileScreen({ username, onGoBack }: ProfileScreenProps) {
       </View>
 
       {/* Reviews */}
-      {profile.reviews.length > 0 && (
+      {(profile.reviews ?? []).length > 0 && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>
             Reviews{' '}
             <Text style={styles.sectionCount}>
-              ({profile.reviews.length})
+              ({(profile.reviews ?? []).length})
             </Text>
           </Text>
-          {profile.reviews.slice(0, 6).map((review) => (
+          {(profile.reviews ?? []).slice(0, 6).map((review) => (
             <ReviewCard key={review.id} review={review} />
           ))}
         </View>
       )}
 
       {/* Social Links */}
-      {profile.social_links.length > 0 && (
+      {(profile.social_links ?? []).length > 0 && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Social</Text>
           <View style={styles.socialRow}>
-            {profile.social_links.map((link) => (
+            {(profile.social_links ?? []).map((link) => (
               <View key={link.type} style={styles.socialChip}>
                 <Text style={styles.socialType}>{link.type}</Text>
                 <Text style={styles.socialValue}>@{link.value}</Text>
@@ -322,6 +359,38 @@ const styles = StyleSheet.create({
     marginTop: spacing.sm,
     textAlign: 'center',
   },
+  searchRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginTop: spacing.xxl,
+    width: '100%',
+    maxWidth: 320,
+  },
+  searchInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: colors.gray300,
+    borderRadius: 10,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
+    fontSize: fontSize.md,
+    color: colors.gray900,
+  },
+  searchButton: {
+    backgroundColor: colors.primary,
+    borderRadius: 10,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.xl,
+    justifyContent: 'center',
+  },
+  searchButtonDisabled: {
+    opacity: 0.5,
+  },
+  searchButtonText: {
+    fontSize: fontSize.sm,
+    fontWeight: '600',
+    color: colors.white,
+  },
   backButton: {
     marginTop: spacing.xxl,
     backgroundColor: colors.primary,
@@ -333,6 +402,20 @@ const styles = StyleSheet.create({
     fontSize: fontSize.sm,
     fontWeight: '600',
     color: colors.white,
+  },
+  backButtonSecondary: {
+    marginTop: spacing.lg,
+    borderWidth: 1,
+    borderColor: colors.gray300,
+    backgroundColor: colors.white,
+    borderRadius: 10,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.xl,
+  },
+  backButtonSecondaryText: {
+    fontSize: fontSize.sm,
+    fontWeight: '600',
+    color: colors.gray700,
   },
 
   breadcrumb: {

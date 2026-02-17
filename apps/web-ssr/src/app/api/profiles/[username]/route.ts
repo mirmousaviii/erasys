@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { fetchProfile } from '@erasys/profile-sdk';
 
 const API_BASE = process.env.API_BASE_URL || 'https://www.hunqz.com';
 
@@ -30,20 +31,16 @@ export async function GET(
   const { username } = await params;
 
   try {
-    const response = await fetch(
-      `${API_BASE}/api/opengrid/profiles/${encodeURIComponent(username)}`,
+    const profile = await fetchProfile({ baseUrl: API_BASE, username });
+    return jsonWithCors(profile);
+  } catch (err) {
+    const message =
+      err instanceof Error ? err.message : 'Failed to fetch profile';
+    const isNotFound =
+      message.includes('404') || message.includes('not found');
+    return jsonWithCors(
+      { error: message },
+      { status: isNotFound ? 404 : 502 },
     );
-
-    if (!response.ok) {
-      return jsonWithCors(
-        { error: `Profile not found: ${username}` },
-        { status: response.status },
-      );
-    }
-
-    const data = await response.json();
-    return jsonWithCors(data);
-  } catch {
-    return jsonWithCors({ error: 'Failed to fetch profile' }, { status: 502 });
   }
 }

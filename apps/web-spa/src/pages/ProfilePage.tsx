@@ -1,8 +1,5 @@
-import {
-  Link,
-  useNavigate,
-  useParams,
-} from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { buildImageUrl } from '@erasys/profile-sdk';
 import { DetailCard } from '../components';
 import { useProfile } from '../hooks/useProfile';
@@ -10,7 +7,12 @@ import { useProfile } from '../hooks/useProfile';
 export function ProfilePage() {
   const { username } = useParams<{ username: string }>();
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
   const { profile, loading, error } = useProfile(username);
+
+  useEffect(() => {
+    setSearchQuery('');
+  }, [username]);
 
   if (loading) {
     return (
@@ -41,19 +43,43 @@ export function ProfilePage() {
   }
 
   if (error || !profile) {
+    const handleSearch = (e: React.FormEvent) => {
+      e.preventDefault();
+      const trimmed = searchQuery.trim();
+      if (trimmed) navigate(`/profile/${encodeURIComponent(trimmed)}`);
+    };
+
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center px-4">
         <h1 className="text-2xl font-bold text-gray-900">Profile Not Found</h1>
-        <p className="mt-2 text-gray-600">
+        <p className="mt-2 text-center text-gray-600">
           Could not load profile for &ldquo;{username ?? 'unknown'}&rdquo;.
         </p>
-        {error && (
-          <p className="mt-1 text-sm text-gray-500">{error}</p>
-        )}
+        {error && <p className="mt-1 text-sm text-gray-500">{error}</p>}
+        <form
+          onSubmit={handleSearch}
+          className="mt-6 flex max-w-sm flex-col gap-3 sm:flex-row"
+        >
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by username"
+            className="flex-1 rounded-lg border border-gray-300 p-3 text-gray-900 placeholder-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            aria-label="Profile username"
+          />
+          <button
+            type="submit"
+            className="shrink-0 rounded-lg bg-emerald-600 p-3 text-sm font-medium text-white transition-colors hover:bg-emerald-700 disabled:opacity-50"
+            disabled={!searchQuery.trim()}
+          >
+            Search
+          </button>
+        </form>
         <button
           type="button"
           onClick={() => navigate('/')}
-          className="mt-6 inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-700"
+          className="mt-4 inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
         >
           <svg
             className="h-4 w-4"
@@ -82,7 +108,7 @@ export function ProfilePage() {
         <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
           <nav className="flex items-center gap-2 text-sm text-gray-500">
             <Link to="/" className="transition-colors hover:text-emerald-600">
-              Home
+              Profiles
             </Link>
             <svg
               className="h-4 w-4"
@@ -174,7 +200,7 @@ export function ProfilePage() {
                   </svg>
                   Age: {profile.personal.age}
                 </span>
-                {profile.personal.spoken_languages.length > 0 && (
+                {(profile.personal.spoken_languages ?? []).length > 0 && (
                   <span className="inline-flex items-center gap-1">
                     <svg
                       className="h-4 w-4"
@@ -190,7 +216,7 @@ export function ProfilePage() {
                         d="m10.5 21 5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 0 1 6-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138c.896.061 1.785.147 2.666.257m-4.589 8.495a18.023 18.023 0 0 1-3.827-5.802"
                       />
                     </svg>
-                    {profile.personal.spoken_languages
+                    {(profile.personal.spoken_languages ?? [])
                       .map((l) => l.toUpperCase())
                       .join(', ')}
                   </span>
@@ -232,11 +258,11 @@ export function ProfilePage() {
         <h2 className="text-xl font-bold text-gray-900">
           Photos
           <span className="ml-2 text-base font-normal text-gray-500">
-            ({profile.pictures.length})
+            ({(profile.pictures ?? []).length})
           </span>
         </h2>
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-          {profile.pictures.map((pic) => (
+          {(profile.pictures ?? []).map((pic) => (
             <div
               key={pic.id}
               className="group relative aspect-square overflow-hidden rounded-xl bg-gray-200 shadow-sm transition-shadow hover:shadow-md"
@@ -258,16 +284,16 @@ export function ProfilePage() {
       </section>
 
       {/* Reviews */}
-      {profile.reviews.length > 0 && (
+      {(profile.reviews ?? []).length > 0 && (
         <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900">
             Reviews
             <span className="ml-2 text-base font-normal text-gray-500">
-              ({profile.reviews.length})
+              ({(profile.reviews ?? []).length})
             </span>
           </h2>
           <div className="mt-6 space-y-4">
-            {profile.reviews.slice(0, 6).map((review) => (
+            {(profile.reviews ?? []).slice(0, 6).map((review) => (
               <div
                 key={review.id}
                 className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm"
@@ -315,11 +341,11 @@ export function ProfilePage() {
       )}
 
       {/* Social Links */}
-      {profile.social_links.length > 0 && (
+      {(profile.social_links ?? []).length > 0 && (
         <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-gray-900">Social</h2>
           <div className="mt-4 flex flex-wrap gap-3">
-            {profile.social_links.map((link) => (
+            {(profile.social_links ?? []).map((link) => (
               <span
                 key={link.type}
                 className="inline-flex items-center gap-2 rounded-full bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700"
