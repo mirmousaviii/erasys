@@ -185,4 +185,149 @@ describe('fetchProfile', () => {
       fetchProfile({ baseUrl: 'https://example.com' }),
     ).rejects.toThrow('Network error');
   });
+
+  describe('normalization (API may omit array fields)', () => {
+    it('should normalize missing pictures to empty array', async () => {
+      const raw = { ...mockProfile, pictures: undefined };
+      (global.fetch as jest.Mock).mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve(raw),
+      });
+
+      const result = await fetchProfile({
+        baseUrl: 'https://example.com',
+      });
+
+      expect(Array.isArray(result.pictures)).toBe(true);
+      expect(result.pictures).toEqual([]);
+    });
+
+    it('should normalize missing reviews to empty array', async () => {
+      const raw = { ...mockProfile, reviews: undefined };
+      (global.fetch as jest.Mock).mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve(raw),
+      });
+
+      const result = await fetchProfile({
+        baseUrl: 'https://example.com',
+      });
+
+      expect(Array.isArray(result.reviews)).toBe(true);
+      expect(result.reviews).toEqual([]);
+    });
+
+    it('should normalize missing social_links to empty array', async () => {
+      const raw = { ...mockProfile, social_links: undefined };
+      (global.fetch as jest.Mock).mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve(raw),
+      });
+
+      const result = await fetchProfile({
+        baseUrl: 'https://example.com',
+      });
+
+      expect(Array.isArray(result.social_links)).toBe(true);
+      expect(result.social_links).toEqual([]);
+    });
+
+    it('should normalize personal.spoken_languages when missing to empty array', async () => {
+      const personalWithoutLangs = { ...mockProfile.personal };
+      delete (personalWithoutLangs as Record<string, unknown>).spoken_languages;
+      const raw = { ...mockProfile, personal: personalWithoutLangs };
+      (global.fetch as jest.Mock).mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve(raw),
+      });
+
+      const result = await fetchProfile({
+        baseUrl: 'https://example.com',
+      });
+
+      expect(Array.isArray(result.personal.spoken_languages)).toBe(true);
+      expect(result.personal.spoken_languages).toEqual([]);
+    });
+
+    it('should normalize personal.spoken_languages when not an array to empty array', async () => {
+      const raw = {
+        ...mockProfile,
+        personal: {
+          ...mockProfile.personal,
+          spoken_languages: 'en' as unknown as string[],
+        },
+      };
+      (global.fetch as jest.Mock).mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve(raw),
+      });
+
+      const result = await fetchProfile({
+        baseUrl: 'https://example.com',
+      });
+
+      expect(Array.isArray(result.personal.spoken_languages)).toBe(true);
+      expect(result.personal.spoken_languages).toEqual([]);
+    });
+
+    it('should preserve existing arrays and not mutate them', async () => {
+      const pictures = [{ ...mockProfile.pictures[0], id: 'p1' }];
+      const reviews = [
+        {
+          id: 'r1',
+          comment: 'Great',
+          updated_at: '2025-01-01',
+          is_reviewer_genuine: true,
+          is_reported: false,
+        },
+      ];
+      const raw = {
+        ...mockProfile,
+        pictures,
+        reviews,
+        social_links: [{ type: 'twitter', value: 'user' }],
+      };
+      (global.fetch as jest.Mock).mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve(raw),
+      });
+
+      const result = await fetchProfile({
+        baseUrl: 'https://example.com',
+      });
+
+      expect(result.pictures).toHaveLength(1);
+      expect(result.pictures[0].id).toBe('p1');
+      expect(result.reviews).toHaveLength(1);
+      expect(result.reviews[0].comment).toBe('Great');
+      expect(result.social_links).toHaveLength(1);
+      expect(result.social_links[0].type).toBe('twitter');
+    });
+
+    it('should normalize all missing array fields in one response', async () => {
+      const raw = {
+        ...mockProfile,
+        pictures: undefined,
+        reviews: undefined,
+        social_links: undefined,
+        personal: {
+          ...mockProfile.personal,
+          spoken_languages: undefined as unknown as string[],
+        },
+      };
+      (global.fetch as jest.Mock).mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve(raw),
+      });
+
+      const result = await fetchProfile({
+        baseUrl: 'https://example.com',
+      });
+
+      expect(result.pictures).toEqual([]);
+      expect(result.reviews).toEqual([]);
+      expect(result.social_links).toEqual([]);
+      expect(result.personal.spoken_languages).toEqual([]);
+    });
+  });
 });

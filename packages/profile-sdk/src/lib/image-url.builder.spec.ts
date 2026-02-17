@@ -22,4 +22,18 @@ describe('buildImageUrl', () => {
       'url_token is required to build an image URL',
     );
   });
+
+  it('should throw when url_token is undefined', () => {
+    expect(() =>
+      buildImageUrl(undefined as unknown as string),
+    ).toThrow('url_token is required to build an image URL');
+  });
+
+  it('should use url_token in path without modifying it', () => {
+    const token = 'token_with_special.chars';
+    const result = buildImageUrl(token);
+    expect(result).toBe(
+      'https://www.hunqz.com/img/usr/original/0x0/token_with_special.chars.jpg',
+    );
+  });
 });
