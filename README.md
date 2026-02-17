@@ -2,6 +2,14 @@
 
 An Nx monorepo containing a **Next.js SSR app**, a **React SPA**, a **React Native (mobile) app**, and a **shared profile SDK** — all in TypeScript (web apps use Tailwind CSS).
 
+## Project structure
+
+The dependency graph (apps depend on the shared `profile-sdk`; no coupling between apps):
+
+![Nx dependency graph](docs/nx-graph.png)
+
+To explore the full graph interactively, run: `npx nx graph`.
+
 ## Quick Start
 
 ```bash
@@ -56,6 +64,7 @@ Copy `.env.example` to `.env.local` in each app directory:
 
 - [Architecture Overview](docs/architecture.md)
 - [CORS Strategy](docs/cors-strategy.md)
+- [Development Guide](docs/development-guide.md)
 - [Profile SDK](docs/profile-sdk.md)
 - [Mobile App](docs/mobile-app.md)
 
@@ -68,3 +77,17 @@ Copy `.env.example` to `.env.local` in each app directory:
 - **Shared**: TypeScript, Jest, SWC, `@erasys/profile-sdk`
 - **Styling**: Tailwind CSS 3 (web), StyleSheet (mobile)
 - **Linting**: ESLint 9, Prettier
+
+## TODO
+
+Possible next steps and improvements for the project:
+
+- **Shared UI** — Extract common components (cards, layout, image gallery) into a shared package consumed by web-ssr and web-spa.
+- **Testing** — Add E2E tests (e.g. Playwright for web, Detox or Maestro for mobile); add unit tests for web-ssr/web-spa components.
+- **CI/CD** — Run `nx build`, `nx test`, and `nx lint` in CI (e.g. GitHub Actions); add deploy pipelines for web-ssr, web-spa, and mobile.
+- **Error handling & loading** — Shared error boundaries and loading states across apps; retry logic and offline handling for the SDK.
+- **Accessibility** — Audit with axe or Lighthouse; improve focus order, ARIA, and keyboard navigation.
+- **Performance** — Image placeholders/skeleton in profile-sdk or apps; consider ISR or caching for SSR profile pages.
+- **SEO & analytics** — Sitemap/robots already in place; add analytics and optional structured data for profiles.
+- **i18n** — If multiple locales are needed, add a shared i18n package or use framework-specific solutions (next-intl, react-i18next).
+- **Monitoring** — Error reporting (e.g. Sentry) and basic health checks for the SSR API route.
